@@ -30,25 +30,25 @@ result = firebase.put(
 facePresent = False
 counter = 0;
 while 1:
-    print("init /n")
     #sensors
     ardOut = ard.readline()
     print(ardOut)
     #format for string is XXXYYYZABBB (11 chars)
     #order is light (x), Sound (y), Ultrasound/boolean (z), lock status/boolean (a), Temperature(b)
-    light = ardOut[1:5]
-    sound = ardOut[5:9]
-    ultrasound = ardOut[9:10]
+    ultrasound = ardOut[0:1]
+    lock = ardOut[1:2]
+    temperature = ardOut[2:7]
     if ultrasound == 1:
         ultraBool = True
     else:
         ultraBool = False
-    lock = ardOut[10:11]
+    light = ardOut[7:10]
     if lock == 1:
         lockBool = True
     else:
         lockBool = False
-    temperature = ardOut[11:15]
+    sound = ardOut[10:13]
+    garbage = ardOut[13:16] 
     # reads frames from a camera
     #ret, img = cap.read()
 
@@ -80,7 +80,7 @@ while 1:
             '/user',
             {
                 "boss": "false",
-               # "door": str(ultraBool),
+               # "door": str(ultraBool)[1:2],
                 "light": str(light),
                 "lock": str(lockBool),
                 "sound": str(sound),
@@ -100,14 +100,14 @@ while 1:
         '/user',
         {
             "boss": "false",
-           # "door": ultraBool,
-            "light": str(light),
-            "lock": str(lockBool),
-            "sound": str(sound),
-            "temperature": str(temperature)
+               # "door": str(ultraBool)[1:2],
+             "light": str(light),
+             "lock": str(lockBool),
+             "sound": str(sound),
+             "temperature":str(temperature)
         }
     )
-    print(counter)
+    #print(counter)
  
 
 # De-allocate any associated memory usage 

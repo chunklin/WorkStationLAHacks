@@ -34,12 +34,7 @@ void loop()
     //Serial.print("Temperature: ");
   //Serial.print(" "+ lightVal + soundVal + "1" + lockV + t);
     //Serial.println(" *C");
-    Serial.print(" "); //3
-
-    Serial.print(lightVal); //4
-    
-    Serial.print(soundVal); //3
- 
+     //2
 
     Serial.print(1); //1
     Serial.print(lockV); //1
@@ -47,7 +42,13 @@ void loop()
     t1=t1*100000;
     float temper = 1.0/(log(t1/100000)/4275+1/298.15)-273.15;
     Serial.print(temper); //4
-    Serial.println(" "); //6
+
+    Serial.print(lightVal); //3
+    
+    Serial.print(soundVal); //3
+ 
+
+    Serial.println(""); //5
     delay(1500);
 }
 }
