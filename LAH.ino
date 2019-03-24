@@ -1,13 +1,12 @@
 #include "DHT.h"
 
-DHT dht(A0, DHT11);
 const int lightS = A1;
 const int soundS = A2;
-const int lockB = 4;
+const int lockB = A0;
 void setup()
 {
     Serial.begin(115200);
-    dht.begin();
+  pinMode(tempS, INPUT);
   pinMode(lightS, INPUT);
   pinMode(soundS, INPUT);
   pinMode(lockB, INPUT);
@@ -15,10 +14,9 @@ void setup()
 
 void loop()
 {
-    float h = dht.readHumidity();
-    float t = dht.readTemperature();
-  int lightVal = analogRead(lightS);
-  int soundVal = analogRead(soundS);
+  float t = analogRead(tempS);
+  float lightVal = analogRead(lightS);
+  float soundVal = analogRead(soundS);
   bool button = digitalRead(lockB);
   int lockV;
   if (button) lockV = 1;
