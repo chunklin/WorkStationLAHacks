@@ -6,7 +6,7 @@ const int soundS = A2;
 const int lockB = 4;
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     dht.begin();
   pinMode(lightS, INPUT);
   pinMode(soundS, INPUT);
