@@ -39,5 +39,5 @@ void loop()
     Serial.print(1);
     Serial.print(lockV);
     Serial.print(t);
-    delay(2000);
+    delay(100);
 }
