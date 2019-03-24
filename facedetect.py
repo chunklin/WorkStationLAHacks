@@ -1,8 +1,21 @@
 # OpenCV program to detect face in real time 
 # import libraries of python OpenCV 
 # where its functionality resides 
-import cv2 
-
+import cv2
+import serial
+from firebase import firebase
+firebase = firebase.FirebaseApplication('https://lahworkstation2019.firebaseio.com/')
+ard = serial.Serial('/dev/tty96B0', 9600)
+result = firebase.put(
+    '',
+    '/user',
+    {
+        "boss": "false",
+        "door": "false",
+        "light": 69,
+        "temperature": 420
+    }
+)
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml') 
 
 # https://github.com/Itseez/opencv/blob/master 
@@ -11,12 +24,31 @@ face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml') 
 
 # capture frames from a camera 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 # loop runs if capturing has been initialized.
 facePresent = False
 counter = 0;
 while 1:
+
+    #sensors
+    ardOut = ard.readline()
+    #format for string is XXXYYYZABBB (11 chars)
+    #order is light (x), Sound (y), Ultrasound/boolean (z), lock status/boolean (a), Temperature(b)
+    light = ardOut[:3]
+    sound = ardOut[3:6]
+    ultrasound = ardOut[6:7]
+    if ultrasound == 1:
+        ultraBool = True
+    else:
+        ultraBool = False
+    lock = ardOut[7:8]
+    if lock == 1:
+        lockBool = True
+    else:
+        lockBool = False
+    lock = ardOut[7:8]
+    temperature = ardOut[8:11]
     # reads frames from a camera
     ret, img = cap.read()
 
@@ -43,8 +75,19 @@ while 1:
     # Display an image in a window
     cv2.imshow('img', img)
     if facePresent and counter == 0:
-        print("true")
-        counter = 500
+        result = firebase.put(
+            '',
+            '/user',
+            {
+                "boss": "false",
+                "door": ultraBool,
+                "light": light,
+                "lock": lockBool,
+                "sound": sound,
+                "temperature": temperature
+            }
+        )
+        counter = 100
     # Wait for Esc key to stop
     k = cv2.waitKey(30) & 0xff
     if k == 27:
@@ -52,6 +95,19 @@ while 1:
     facePresent = False
     if counter > 0:
         counter -= 1
+    result = firebase.put(
+        '',
+        '/user',
+        {
+            "boss": "false",
+            "door": ultraBool,
+            "light": light,
+            "lock": lockBool,
+            "sound": sound,
+            "temperature": temperature
+        }
+    )
+    print(counter)
 
 # Close the window 
 cap.release() 
