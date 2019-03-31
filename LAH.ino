@@ -1,4 +1,4 @@
-#include "DHT.h"
+
 #include <math.h>
 
 const int lightS = A1;
